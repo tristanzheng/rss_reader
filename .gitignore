@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+coverage/
+
+# Local databases
+*.sqlite
+*.sqlite3
+
+# Env files
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
