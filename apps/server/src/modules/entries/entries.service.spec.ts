@@ -28,8 +28,8 @@ describe('EntriesService', () => {
     fetcher = module.get(FetcherService);
     feeds = module.get(getRepositoryToken(FeedEntity));
 
-    await ensureFeed(feeds, 'f1');
-    await ensureFeed(feeds, 'f2');
+    await ensureFeed(feeds, 'f1', 'u1');
+    await ensureFeed(feeds, 'f2', 'u1');
 
     await fetcher.ingest([
       {

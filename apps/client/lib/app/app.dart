@@ -136,6 +136,7 @@ class _AppShellState extends State<AppShell> {
               icon: const Icon(Icons.error_outline),
               onPressed: () {
                 final errorText = appState.error!;
+                appState.clearError();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(errorText)),
                 );

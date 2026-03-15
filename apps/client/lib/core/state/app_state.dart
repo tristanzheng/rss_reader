@@ -58,10 +58,16 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> selectFeed(String? feedId) async {
+    final previousFeedId = selectedFeedId;
     selectedFeedId = feedId;
-    await _runGuarded(() async {
-      entries = await _entryLoader(feedId: feedId);
-    }, silentLoading: true);
+    try {
+      await _runGuarded(() async {
+        entries = await _entryLoader(feedId: feedId);
+      }, silentLoading: true);
+    } catch (_) {
+      selectedFeedId = previousFeedId;
+      notifyListeners();
+    }
   }
 
   Future<void> toggleRead(String entryId) async {
@@ -82,6 +88,7 @@ class AppState extends ChangeNotifier {
       } else {
         await _markRead(entryId);
       }
+      if (error != null) clearError();
     } catch (exception) {
       entries = entries
           .map((entry) => entry.id == entryId ? current : entry)
@@ -109,6 +116,7 @@ class AppState extends ChangeNotifier {
       } else {
         await _save(entryId);
       }
+      if (error != null) clearError();
     } catch (exception) {
       entries = entries
           .map((entry) => entry.id == entryId ? current : entry)

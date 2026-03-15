@@ -28,6 +28,8 @@ export class EntriesService {
   async list(userId: string, query: EntryQuery) {
     const qb = this.entries.createQueryBuilder('entry');
 
+    qb.innerJoin('entry.feed', 'feed', 'feed.userId = :userId', { userId });
+
     if (query.source) {
       qb.andWhere('entry.feedId = :source', { source: query.source });
     }
@@ -89,7 +91,16 @@ export class EntriesService {
     qb.skip((page - 1) * pageSize).take(pageSize);
 
     const [items, total] = await qb.getManyAndCount();
-    return { page, pageSize, total, items };
+
+    const readSet = new Set(readIds);
+    const saveSet = new Set(saveIds);
+    const enriched = items.map((item) => ({
+      ...item,
+      isRead: readSet.has(item.id),
+      isSaved: saveSet.has(item.id),
+    }));
+
+    return { page, pageSize, total, items: enriched };
   }
 
   detail(id: string): Promise<EntryEntity | null> {

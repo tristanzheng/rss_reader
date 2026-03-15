@@ -38,7 +38,7 @@ describe('RSS Modules (integration)', () => {
       getRepositoryToken(FeedEntity),
     );
 
-    await ensureFeed(feeds, 'f1');
+    await ensureFeed(feeds, 'f1', 'u1');
 
     await fetcher.ingest([
       {
